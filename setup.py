@@ -8,4 +8,5 @@ setup(name='speck',
       author='Matej Stuchlik',
       scripts=['bin/speck'],
       packages=['speck'],
+      test_suite="tests",
       )

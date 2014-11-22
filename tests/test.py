@@ -3,7 +3,7 @@ from speck import parser
 
 class TestSpec(unittest.TestCase):
     def test_basic_spec(self):
-        parser.parse("test.spec")
+        parser.parse("tests/test.spec")
         self.assertEqual(parser.name, "test-spec")
         self.assertEqual(parser.version, "1.0.0")
         self.assertEqual(parser.release, "1%{?dist}")
