@@ -1,4 +1,5 @@
 import re
+
 from entities import LineParser, Patch
 
 class spec():
@@ -23,7 +24,7 @@ class spec():
             lines = s.readlines()
             lines.insert(last_patch.source_line_no + 1,
                          "Patch{}: {}\n".format(last_patch.patch_number + 1,
-                                              patch_file))
+                                                patch_file))
             lines.insert(last_patch.applied_line_no + 1,
                          "%patch{} -p1\n".format(last_patch.patch_number + 1))
 
@@ -36,17 +37,13 @@ class spec():
                           applied_line_no=last_patch.applied_line_no + 1)
 
         self.patches += [new_patch]
-        pass
 
     def enable_patch(self, patch_number):
+        # should this be defined in entity or plugin?
         raise NotImplementedError
 
     def disable_patch(self, patch_number):
         raise NotImplementedError
-
-    def add_changelog(self, entry, name=None, date=None):
-        # run rpmdev-bumpspec?
-        pass
 
     def register(self, regexp):
         # make sure the function accepts correct args?
@@ -70,7 +67,6 @@ def parse_release(self, release):
 
 @parser.register("^\s*Summary:\s*(.+)")
 def parse_summary(self, summary):
-    # WHAT IF ITS IN SUBPACKAGE???
     self.summary = summary
 
 @parser.register("^\s*Patch(\d+):\s*(.+)")
