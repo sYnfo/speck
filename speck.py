@@ -38,6 +38,12 @@ class spec():
         self.patches += [new_patch]
         pass
 
+    def enable_patch(self, patch_number):
+        raise NotImplementedError
+
+    def disable_patch(self, patch_number):
+        raise NotImplementedError
+
     def add_changelog(self, entry, name=None, date=None):
         # run rpmdev-bumpspec?
         pass
