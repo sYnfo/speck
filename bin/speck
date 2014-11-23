@@ -3,10 +3,10 @@
 """speck -- rpm spec modification tool
 
 Usage:
-    se.py [spec] patch add <file>
-    se.py [spec] patch disable <number>
-    se.py [spec] patch enable <number>
-    se.py [spec] patch list
+    speck [spec] patch add <file>
+    speck [spec] patch disable <number>
+    speck [spec] patch enable <number>
+    speck [spec] patch list
 
 Options:
     -h --help   Show this screen
