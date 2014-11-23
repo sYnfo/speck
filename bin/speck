@@ -18,6 +18,7 @@ import sys
 
 from docopt import docopt
 from speck import parser
+from tabulate import tabulate
 
 if __name__ == '__main__':
     arguments = docopt(__doc__)
@@ -27,7 +28,7 @@ if __name__ == '__main__':
         if len(specs) > 1:
             print "Multiple spec file in current directory, please specify one"
             sys.exit(1)
-        elif len(spec) == 0:
+        elif len(specs) == 0:
             print "No spec file found in current directory"
             sys.exit(1)
         arguments['spec'] = specs[0]
@@ -42,5 +43,7 @@ if __name__ == '__main__':
         elif arguments['disable']:
             parser.disable_patch(arguments['<number>'])
         elif arguments['list']:
+            patches = []
             for patch in parser.patches:
-                print str(patch)
+                patches += [[patch.patch_number, patch.source]]
+            print tabulate(patches, headers=['', 'file'])
