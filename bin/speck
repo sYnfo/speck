@@ -27,6 +27,9 @@ if __name__ == '__main__':
         if len(specs) > 1:
             print "Multiple spec file in current directory, please specify one"
             sys.exit(1)
+        elif len(spec) == 0:
+            print "No spec file found in current directory"
+            sys.exit(1)
         arguments['spec'] = specs[0]
 
     parser.parse(arguments['spec'])
