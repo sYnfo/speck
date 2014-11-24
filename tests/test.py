@@ -18,7 +18,7 @@ class TestBasicSpec(unittest.TestCase):
         self.assertEqual(parser.summary, "test spec for the speck program")
 
     def test_source(self):
-        self.assertEqual(parser.source.number, "0")
+        self.assertEqual(parser.source.number, 0)
         self.assertEqual(parser.source.source, "test_source.tar.gz")
         self.assertEqual(parser.source.line_no, 12)
 
