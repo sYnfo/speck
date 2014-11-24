@@ -26,5 +26,9 @@ class TestBasicSpec(unittest.TestCase):
         self.assertEqual(str(parser.patches[0]),
                          "Patch number 0, stored in foo.patch, defined at 14 and applied at 38")
 
+    def test_prep(self):
+        self.assertEqual(parser.prep.line_no, 36)
+
+
 if __name__ == '__main__':
     unittest.main()

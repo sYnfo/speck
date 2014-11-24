@@ -1,6 +1,6 @@
 import re
 
-from .entities import LineParser, Patch, Source
+from .entities import LineParser, Prep, Patch, Source
 
 class spec():
     def __init__(self):
@@ -52,6 +52,10 @@ class spec():
         return register 
 
 parser = spec()
+
+@parser.register("^\s*%prep")
+def parse_prep(self):
+    self.prep = Prep(self.line_no)
 
 @parser.register("^\s*Name:\s*(\S+)")
 def parse_name(self, name):

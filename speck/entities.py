@@ -1,3 +1,7 @@
+class Prep():
+    def __init__(self, line_no):
+        self.line_no = line_no
+
 class Source():
     def __init__(self, number, source, line_no):
         self.number = number
