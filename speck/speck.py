@@ -18,23 +18,28 @@ class spec():
 
     # do not implement this in the parser, should be in a plugin
     def add_patch(self, patch_file):
-        last_patch = sorted(self.patches, key=lambda x: x.source_line_no)[-1]
+        if self.patches:
+            last_patch = sorted(self.patches, key=lambda x: x.source_line_no)[-1]
+            new_source_line = last_patch.source_line_no + 1
+            new_apply_line = last_patch.applied_line_no + 1
+            new_patch_number = last_patch.patch_number + 1
+        else:
+            new_source_line = self.source.line_no + 1
+            new_apply_line = self.prep.line_no + 1
+            new_patch_number = 0
 
         with open(self.spec_file, 'rw') as s:
             lines = s.readlines()
-            lines.insert(last_patch.source_line_no + 1,
-                         "Patch{}: {}\n".format(last_patch.patch_number + 1,
-                                                patch_file))
-            lines.insert(last_patch.applied_line_no + 1,
-                         "%patch{} -p1\n".format(last_patch.patch_number + 1))
+            lines.insert(new_source_line, "Patch{}: {}\n".format(new_patch_number, patch_file))
+            lines.insert(new_apply_line, "%patch{} -p1\n".format(new_patch_number))
 
         with open(self.spec_file, 'w') as s:
             s.writelines(lines)
 
-        new_patch = Patch(patch_number=last_patch.patch_number + 1,
+        new_patch = Patch(patch_number=new_patch_number,
                           source=patch_file,
-                          source_line_no=last_patch.source_line_no + 1,
-                          applied_line_no=last_patch.applied_line_no + 1)
+                          source_line_no=new_source_line,
+                          applied_line_no=new_apply_line)
 
         self.patches += [new_patch]
 
