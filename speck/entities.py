@@ -1,3 +1,9 @@
+class Source():
+    def __init__(self, number, source, line_no):
+        self.number = number
+        self.source = source
+        self.line_no = line_no
+
 class Patch():
     def __init__(self, patch_number=None, source=None, source_line_no=None,
                  applied_line_no=None):

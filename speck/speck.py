@@ -1,6 +1,6 @@
 import re
 
-from entities import LineParser, Patch
+from .entities import LineParser, Patch, Source
 
 class spec():
     def __init__(self):
@@ -69,6 +69,11 @@ def parse_release(self, release):
 def parse_summary(self, summary):
     self.summary = summary
 
+@parser.register("^\s*Source(\d+):\s*(\S+)")
+def parse_source(self, number, source):
+    self.source = Source(number, source, self.line_no)
+
+# is Patch00 eq to Patch0?
 @parser.register("^\s*Patch(\d+):\s*(.+)")
 def parse_patch_definition(self, patch_number, patch_file):
     self.patches += [Patch(patch_number=int(patch_number), source=patch_file,

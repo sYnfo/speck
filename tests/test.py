@@ -17,6 +17,11 @@ class TestBasicSpec(unittest.TestCase):
     def test_summary(self):
         self.assertEqual(parser.summary, "test spec for the speck program")
 
+    def test_source(self):
+        self.assertEqual(parser.source.number, "0")
+        self.assertEqual(parser.source.source, "test_source.tar.gz")
+        self.assertEqual(parser.source.line_no, 12)
+
     def test_patches(self):
         self.assertEqual(str(parser.patches[0]),
                          "Patch number 0, stored in foo.patch, defined at 14 and applied at 38")

@@ -9,7 +9,7 @@ Summary:        test spec for the speck program
 
 License:        BSD
 URL:            http://github.com/mitsuhiko/click
-Source0:        https://pypi.python.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+Source0:        test_source.tar.gz
 #https://github.com/mitsuhiko/click/pull/209
 Patch0:         foo.patch
 Patch1:         bar.patch
