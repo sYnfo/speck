@@ -3,10 +3,10 @@
 """speck -- rpm spec modification tool
 
 Usage:
-    speck [spec] patch add <file>
-    speck [spec] patch disable <number>
-    speck [spec] patch enable <number>
-    speck [spec] patch list
+    speck [spec] ( p | patch ) ( a | add ) <file>
+    speck [spec] ( p | patch ) ( d | disable ) <number>
+    speck [spec] ( p | patch ) ( e | enable ) <number>
+    speck [spec] ( p | patch ) ( l | list )
 
 Options:
     -h --help   Show this screen
@@ -35,14 +35,14 @@ if __name__ == '__main__':
 
     parser.parse(arguments['spec'])
 
-    if arguments['patch']:
-        if arguments['add']:
+    if arguments['patch'] or arguments['p']:
+        if arguments['add'] or arguments['a']:
             parser.add_patch(arguments['<file>'])
-        elif arguments['enable']:
+        elif arguments['enable'] or arguments['e']:
             parser.enable_patch(arguments['<number>'])
-        elif arguments['disable']:
+        elif arguments['disable'] or arguments['d']:
             parser.disable_patch(arguments['<number>'])
-        elif arguments['list']:
+        elif arguments['list'] or arguments['l']:
             patches = []
             for patch in parser.patches:
                 patches += [[patch.patch_number, patch.source]]
