@@ -1,5 +1,3 @@
-#!/usr/vin/python
-
 from setuptools import setup
 
 setup(name='speck',
