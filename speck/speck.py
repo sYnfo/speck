@@ -3,15 +3,16 @@ import re
 from .entities import LineParser, Prep, Patch, Source
 
 class spec():
+    parsers = []
+
     def __init__(self):
-        self.parsers = []
         self.patches = []
 
     def parse(self, spec_file):
         self.spec_file = spec_file
         with open(spec_file, 'r') as f:
             for self.line_no, line in enumerate(f, start=1):
-                for p in self.parsers:
+                for p in spec.parsers:
                     match = re.match(p.regexp, line)
                     if match:
                         p.consume(self, *match.groups())
@@ -50,44 +51,52 @@ class spec():
     def disable_patch(self, patch_number):
         raise NotImplementedError
 
-    def register(self, regexp):
+    @staticmethod
+    def register_parser(regexp):
+        def register_parser(f):
+            spec.parsers += [LineParser(regexp=regexp, consume=f)]
+        return register_parser 
+
+    def register_action(self, noun, verb):
         # make sure the function accepts correct args?
-        def register(f):
-            self.parsers += [LineParser(regexp=regexp, consume=f)]
-        return register 
+        def register_parser(f):
+            #self.add_patch = f
+            pass
+        return register_parser 
 
 parser = spec()
 
-@parser.register("^\s*%prep")
+@spec.register_parser("^\s*%prep")
 def parse_prep(self):
     self.prep = Prep(self.line_no)
 
-@parser.register("^\s*Name:\s*(\S+)")
+@spec.register_parser("^\s*Name:\s*(\S+)")
 def parse_name(self, name):
     self.name = name
 
-@parser.register("^\s*Version:\s*(\S+)")
+@spec.register_parser("^\s*Version:\s*(\S+)")
 def parse_version(self, version):
     self.version = version
 
-@parser.register("^\s*Release:\s*(\S+)")
+@spec.register_parser("^\s*Release:\s*(\S+)")
 def parse_release(self, release):
     self.release = release
 
-@parser.register("^\s*Summary:\s*(.+)")
+@spec.register_parser("^\s*Summary:\s*(.+)")
 def parse_summary(self, summary):
     self.summary = summary
 
-@parser.register("^\s*Source(\d+):\s*(\S+)")
+@spec.register_parser("^\s*Source(\d+):\s*(\S+)")
 def parse_source(self, number, source):
     self.source = Source(int(number), source, self.line_no)
 
-@parser.register("^\s*Patch(\d+):\s*(.+)")
+@spec.register_parser("^\s*Patch(\d+):\s*(.+)")
 def parse_patch_definition(self, patch_number, patch_file):
     self.patches += [Patch(patch_number=int(patch_number), source=patch_file,
                            source_line_no=self.line_no, applied_line_no=None)]
 
-@parser.register("^\s*%patch(\d+)\s*(.+)")
+# keep indent
+@spec.register_parser("^\s*%patch(\d+)\s*(.+)")
 def parse_patch_application(self, patch_number, options):
     for p in self.patches:
         if p.patch_number == int(patch_number):

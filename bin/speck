@@ -17,8 +17,10 @@ from glob import glob
 import sys
 
 from docopt import docopt
-from speck import parser
+from speck import spec
 from tabulate import tabulate
+
+parser = spec()
 
 if __name__ == '__main__':
     arguments = docopt(__doc__)
