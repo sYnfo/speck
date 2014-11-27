@@ -1,3 +1,3 @@
-from speck import spec
+from .speck import spec
 
 __all__ = ['spec']

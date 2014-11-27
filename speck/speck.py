@@ -45,13 +45,16 @@ class spec():
 
     @staticmethod
     def register_action(binding, type):
+        # action has to be a method of spec
+        # there should be a way to call the "generic" action,
+        # after a specialized one
         def register_parser(f):
             if not type in spec.actions:
                 spec.actions[type] = {}
             spec.actions[type][binding.__name__] = f
         return register_parser 
 
-import actions
+from . import actions
 
 @spec.register_parser("^\s*%prep")
 def parse_prep(self):
