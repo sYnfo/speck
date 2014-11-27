@@ -1,4 +1,5 @@
 import re
+from functools import partial
 
 from .entities import LineParser, Prep, Patch, Source
 
@@ -9,6 +10,8 @@ class spec():
     def __init__(self, type="generic"):
         self.patches = []
         self.type = type
+        for action in spec.actions[type]:
+            setattr(self, action, partial(spec.actions[type][action], self))
 
     def parse(self, spec_file):
         self.spec_file = spec_file
@@ -25,7 +28,7 @@ class spec():
     # modyfying e.g. Patch should maybe write it file automatically?
 
     def add_patch(self, patch_file):
-        spec.actions[self.type]["patch_add"](self, patch_file)
+        raise NotImplementedError
 
     def enable_patch(self, patch_number):
         # should this be defined in entity or plugin?
@@ -45,7 +48,7 @@ class spec():
         def register_parser(f):
             if not type in spec.actions:
                 spec.actions[type] = {}
-            spec.actions[type][binding] = f
+            spec.actions[type][binding.__name__] = f
         return register_parser 
 
 import actions

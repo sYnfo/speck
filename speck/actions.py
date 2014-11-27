@@ -1,7 +1,7 @@
 from speck import spec
 from .entities import LineParser, Prep, Patch, Source
 
-@spec.register_action("patch_add", "generic")
+@spec.register_action(spec.add_patch, "generic")
 def add_patch(spec, patch_file):
     if spec.patches:
         last_patch = sorted(spec.patches, key=lambda x: x.source_line_no)[-1]
