@@ -2,11 +2,13 @@ class Prep():
     def __init__(self, line_no):
         self.line_no = line_no
 
+
 class Source():
     def __init__(self, number, source, line_no):
         self.number = number
         self.source = source
         self.line_no = line_no
+
 
 class Patch():
     def __init__(self, patch_number=None, source=None, source_line_no=None,
@@ -22,6 +24,7 @@ class Patch():
                                                          self.source,
                                                          self.source_line_no,
                                                          self.applied_line_no))
+
 
 class LineParser():
     def __init__(self, regexp=None, consume=None):

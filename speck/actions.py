@@ -1,5 +1,6 @@
 from .speck import spec
-from .entities import LineParser, Prep, Patch, Source
+from .entities import Patch
+
 
 @spec.register_action(spec.add_patch, "generic")
 def add_patch(spec, patch_file):
@@ -17,7 +18,8 @@ def add_patch(spec, patch_file):
 
     with open(spec.spec_file, 'r') as s:
         lines = s.readlines()
-        lines.insert(new_source_line, "Patch{}: {}\n".format(new_patch_number, patch_file))
+        lines.insert(new_source_line, "Patch{}: {}\n".format(new_patch_number,
+                                                             patch_file))
         lines.insert(new_apply_line, "%patch{} -p1\n".format(new_patch_number))
 
     with open(spec.spec_file, 'w') as s:

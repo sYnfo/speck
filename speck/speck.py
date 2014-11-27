@@ -3,6 +3,7 @@ from functools import partial
 
 from .entities import LineParser, Prep, Patch, Source
 
+
 class spec():
     parsers = []
     actions = {}
@@ -49,41 +50,49 @@ class spec():
         # there should be a way to call the "generic" action,
         # after a specialized one
         def register_parser(f):
-            if not type in spec.actions:
+            if type not in spec.actions:
                 spec.actions[type] = {}
             spec.actions[type][binding.__name__] = f
         return register_parser 
 
 from . import actions
 
+
 @spec.register_parser("^\s*%prep")
 def parse_prep(self):
     self.prep = Prep(self.line_no)
+
 
 @spec.register_parser("^\s*Name:\s*(\S+)")
 def parse_name(self, name):
     self.name = name
 
+
 @spec.register_parser("^\s*Version:\s*(\S+)")
 def parse_version(self, version):
     self.version = version
+
 
 @spec.register_parser("^\s*Release:\s*(\S+)")
 def parse_release(self, release):
     self.release = release
 
+
 @spec.register_parser("^\s*Summary:\s*(.+)")
 def parse_summary(self, summary):
     self.summary = summary
+
 
 @spec.register_parser("^\s*Source(\d+):\s*(\S+)")
 def parse_source(self, number, source):
     self.source = Source(int(number), source, self.line_no)
 
+
 @spec.register_parser("^\s*Patch(\d+):\s*(.+)")
 def parse_patch_definition(self, patch_number, patch_file):
     self.patches += [Patch(patch_number=int(patch_number), source=patch_file,
                            source_line_no=self.line_no, applied_line_no=None)]
+
 
 # keep indent
 @spec.register_parser("^\s*%patch(\d+)\s*(.+)")
