@@ -4,9 +4,11 @@ from .entities import LineParser, Prep, Patch, Source
 
 class spec():
     parsers = []
+    actions = {}
 
-    def __init__(self):
+    def __init__(self, type="generic"):
         self.patches = []
+        self.type = type
 
     def parse(self, spec_file):
         self.spec_file = spec_file
@@ -17,32 +19,13 @@ class spec():
                     if match:
                         p.consume(self, *match.groups())
 
-    # do not implement this in the parser, should be in a plugin
+    # modify patch <number>
+    # opens up vim with the patch def and app
+
+    # modyfying e.g. Patch should maybe write it file automatically?
+
     def add_patch(self, patch_file):
-        if self.patches:
-            last_patch = sorted(self.patches, key=lambda x: x.source_line_no)[-1]
-            new_source_line = last_patch.source_line_no + 1
-            new_apply_line = last_patch.applied_line_no + 1
-            new_patch_number = last_patch.patch_number + 1
-        else:
-            new_source_line = self.source.line_no + 1
-            new_apply_line = self.prep.line_no + 1
-            new_patch_number = 0
-
-        with open(self.spec_file, 'rw') as s:
-            lines = s.readlines()
-            lines.insert(new_source_line, "Patch{}: {}\n".format(new_patch_number, patch_file))
-            lines.insert(new_apply_line, "%patch{} -p1\n".format(new_patch_number))
-
-        with open(self.spec_file, 'w') as s:
-            s.writelines(lines)
-
-        new_patch = Patch(patch_number=new_patch_number,
-                          source=patch_file,
-                          source_line_no=new_source_line,
-                          applied_line_no=new_apply_line)
-
-        self.patches += [new_patch]
+        spec.actions[self.type]["patch_add"](self, patch_file)
 
     def enable_patch(self, patch_number):
         # should this be defined in entity or plugin?
@@ -57,14 +40,15 @@ class spec():
             spec.parsers += [LineParser(regexp=regexp, consume=f)]
         return register_parser 
 
-    def register_action(self, noun, verb):
-        # make sure the function accepts correct args?
+    @staticmethod
+    def register_action(binding, type):
         def register_parser(f):
-            #self.add_patch = f
-            pass
+            if not type in spec.actions:
+                spec.actions[type] = {}
+            spec.actions[type][binding] = f
         return register_parser 
 
-parser = spec()
+import actions
 
 @spec.register_parser("^\s*%prep")
 def parse_prep(self):
