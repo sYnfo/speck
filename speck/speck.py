@@ -19,7 +19,7 @@ class spec():
         with open(spec_file, 'r') as f:
             for self.line_no, line in enumerate(f, start=1):
                 for p in spec.parsers:
-                    match = re.match(p.regexp, line)
+                    match = p.regexp.match(line)
                     if match:
                         p.consume(self, *match.groups())
 
@@ -41,7 +41,7 @@ class spec():
     @staticmethod
     def register_parser(regexp):
         def register_parser(f):
-            spec.parsers += [LineParser(regexp=regexp, consume=f)]
+            spec.parsers += [LineParser(regexp=re.compile(regexp), consume=f)]
         return register_parser 
 
     @staticmethod
