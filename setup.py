@@ -4,7 +4,11 @@ setup(name='speck',
       version='0.1',
       description='Tool for semantic modification of spec files',
       author='Matej Stuchlik',
-      scripts=['bin/speck'],
-      packages=['speck'],
+      include_package_data=True,
+      py_modules=['speck'],
       test_suite="tests",
+      entry_points='''
+          [console_scripts]
+          speck=speck:cli
+          ''',
       )
