@@ -3,7 +3,17 @@ from speck import spec
 import unittest
 import shutil
 import os
+import subprocess
 
+
+class TestSpeckBinary(unittest.TestCase):
+    def test_patch_list(self):
+        output = subprocess.check_output(['speck', '--spec', 'tests/test.spec',
+                                          'patch', 'list'])
+        self.assertEqual(output.decode('utf=8'), "-  ---------\n"
+                                                 "0  foo.patch\n"
+                                                 "1  bar.patch\n"
+                                                 "-  ---------\n")
 
 class TestBasicSpec(unittest.TestCase):
     def setUp(self):
