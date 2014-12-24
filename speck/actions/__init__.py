@@ -32,3 +32,23 @@ def add_patch(spec, patch_file, number=None, source_line_no=None,
                       applied_line_no=new_apply_line)
 
     spec.patches += [new_patch]
+
+@spec.register_action(spec.remove_patch, "generic")
+def remove_patch(spec, number):
+    removed_patch = None
+    for patch in spec.patches:
+        if patch.number == int(number):
+            removed_patch = patch
+            break
+    else:
+        print("No such patch")
+        return
+
+    with open(spec.spec_file, 'r') as s:
+        lines = s.readlines()
+
+    del lines[removed_patch.source_line_no - 1]
+    del lines[removed_patch.applied_line_no - 2]
+    # should you decrement following patch numbers?
+    with open(spec.spec_file, 'w') as s:
+        s.writelines(lines)

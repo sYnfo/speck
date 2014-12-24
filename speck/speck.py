@@ -37,6 +37,9 @@ class spec():
     def add_patch(self, patch_file):
         raise NotImplementedError
 
+    def remove_patch(self, patch_file):
+        raise NotImplementedError
+
     def enable_patch(self, number):
         # should this be defined in entity or plugin?
         raise NotImplementedError

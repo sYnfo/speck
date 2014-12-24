@@ -36,6 +36,12 @@ def patch_add(file):
     """adds patch"""
     parser.add_patch(file)
 
+@patch.command("remove")
+@click.argument("number")
+def patch_remove(number):
+    """remove patch"""
+    parser.remove_patch(number)
+
 @patch.command("edit")
 @click.argument("number")
 def patch_edit(number):
