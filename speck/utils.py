@@ -12,3 +12,8 @@ def input_from_editor(template):
         subprocess.call([editor, tmp.name])
         tmp.seek(0)
         return tmp.readlines()
+
+class LineParser():
+    def __init__(self, regexp=None, consume=None):
+        self.regexp = regexp
+        self.consume = consume

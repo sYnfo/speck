@@ -1,7 +1,7 @@
 import re
 from functools import partial
 
-from .entities import LineParser, Prep, Patch, Source
+from .utils import LineParser
 
 
 class spec():
@@ -9,15 +9,21 @@ class spec():
     actions = {}
 
     def __init__(self, type="generic"):
-        self.patches = []
         self.type = type
+        self.sources = []
+        self.patches = []
+        self.globals = []
+
+        from . import parsers
+        from . import actions
+
         for action in spec.actions[type]:
             setattr(self, action, partial(spec.actions[type][action], self))
 
     def parse(self, spec_file):
         self.spec_file = spec_file
         with open(spec_file, 'r') as f:
-            for self.line_no, line in enumerate(f, start=1):
+            for self.current_line, line in enumerate(f, start=1):
                 for p in spec.parsers:
                     match = p.regexp.match(line)
                     if match:
@@ -31,11 +37,11 @@ class spec():
     def add_patch(self, patch_file):
         raise NotImplementedError
 
-    def enable_patch(self, patch_number):
+    def enable_patch(self, number):
         # should this be defined in entity or plugin?
         raise NotImplementedError
 
-    def disable_patch(self, patch_number):
+    def disable_patch(self, number):
         raise NotImplementedError
 
     @staticmethod
@@ -55,53 +61,3 @@ class spec():
             spec.actions[type][binding.__name__] = f
         return register_parser 
 
-from . import actions
-
-
-@spec.register_parser("^\s*%prep")
-def parse_prep(self):
-    self.prep = Prep(self.line_no)
-
-
-@spec.register_parser("^\s*Name:\s*(\S+)")
-def parse_name(self, name):
-    self.name = name
-
-
-@spec.register_parser("^\s*Version:\s*(\S+)")
-def parse_version(self, version):
-    self.version = version
-
-
-@spec.register_parser("^\s*Release:\s*(\S+)")
-def parse_release(self, release):
-    self.release = release
-
-
-@spec.register_parser("^\s*Summary:\s*(.+)")
-def parse_summary(self, summary):
-    self.summary = summary
-
-
-@spec.register_parser("^\s*Source(\d+):\s*(\S+)")
-def parse_source(self, number, source):
-    self.source = Source(int(number), source, self.line_no)
-
-
-@spec.register_parser("^\s*Patch(\d+):\s*(.+)")
-def parse_patch_definition(self, patch_number, patch_file):
-    self.patches += [Patch(patch_number=int(patch_number), source=patch_file,
-                           source_line_no=self.line_no, applied_line_no=None)]
-
-
-# keep indent
-@spec.register_parser("^\s*%patch(\d+)\s*(.+)")
-def parse_patch_application(self, patch_number, options):
-    for p in self.patches:
-        if p.patch_number == int(patch_number):
-            p.applied_line_no = self.line_no
-
-# ^ These all look the same, maybe make a generic func?
-# the regexp are rather similar as well
-# but then again the processing will likely be quite different
-# so maybe just commot decorator?

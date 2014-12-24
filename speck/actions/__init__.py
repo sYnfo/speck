@@ -1,5 +1,5 @@
-from .speck import spec
-from .entities import Patch
+from speck import spec
+from speck.objects import Patch
 
 
 @spec.register_action(spec.add_patch, "generic")
@@ -8,7 +8,7 @@ def add_patch(spec, patch_file):
         last_patch = sorted(spec.patches, key=lambda x: x.source_line_no)[-1]
         new_source_line = last_patch.source_line_no + 1
         new_apply_line = last_patch.applied_line_no + 1
-        new_patch_number = last_patch.patch_number + 1
+        new_patch_number = last_patch.number + 1
     else:
         # there can be more sources, pick the last one
         # this seem to be a common theme ^
@@ -25,7 +25,7 @@ def add_patch(spec, patch_file):
     with open(spec.spec_file, 'w') as s:
         s.writelines(lines)
 
-    new_patch = Patch(patch_number=new_patch_number,
+    new_patch = Patch(number=new_patch_number,
                       source=patch_file,
                       source_line_no=new_source_line,
                       applied_line_no=new_apply_line)

@@ -8,9 +8,10 @@ Release:        1%{?dist}
 Summary:        test spec for the speck program
 
 License:        BSD
-URL:            http://github.com/mitsuhiko/click
-Source0:        test_source.tar.gz
-#https://github.com/mitsuhiko/click/pull/209
+URL:            foo.bar.com
+Source0:        foo.tar.gz
+Source0:        bar.tar.xz
+
 Patch0:         foo.patch
 Patch1:         bar.patch
 

@@ -64,5 +64,17 @@ def patch_list():
     """lists patches"""
     patches = []
     for patch in parser.patches:
-        patches += [[patch.patch_number, patch.source]]
+        patches += [[patch.number, patch.source]]
     click.echo(tabulate(patches))
+
+@cli.group()
+def source():
+    """manages patches"""
+
+@source.command("list")
+def source_list():
+    """lists sources"""
+    sources = []
+    for source in parser.sources:
+        sources += [[source.number, source.source]]
+    click.echo(tabulate(sources))
