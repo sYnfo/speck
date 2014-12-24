@@ -96,12 +96,20 @@ class TestSpecModifications(unittest.TestCase):
         os.remove("tests/modified.spec")
 
     def test_patch_add(self):
-        self.parser.add_patch("bar.patch")
+        self.parser.add_patch("baz.patch")
         added_patch = self.parser.patches[-1]
         self.assertEqual(added_patch.number, 2)
-        self.assertEqual(added_patch.source, "bar.patch")
+        self.assertEqual(added_patch.source, "baz.patch")
         self.assertEqual(added_patch.source_line_no, 17)
         self.assertEqual(added_patch.applied_line_no, 41)
+
+    def test_patch_remove(self):
+        self.parser.remove_patch(0)
+        patch = self.parser.patches[0]
+        self.assertEqual(patch.number, 1)
+        self.assertEqual(patch.source, "bar.patch")
+        self.assertEqual(patch.source_line_no, 16)
+        self.assertEqual(patch.applied_line_no, 40)
 
 
 if __name__ == '__main__':
