@@ -49,6 +49,7 @@ def remove_patch(spec, number):
 
     del lines[removed_patch.source_line_no - 1]
     del lines[removed_patch.applied_line_no - 2]
+    spec.patches.remove(removed_patch)
     # should you decrement following patch numbers?
     with open(spec.spec_file, 'w') as s:
         s.writelines(lines)
